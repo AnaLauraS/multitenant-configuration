@@ -24,6 +24,8 @@ spring:
           uri: lb://ms-identity
           predicates:
             - Path=/auth/**
+          filters:
+            - AuthenticationFilter
 
 management:
   endpoints:
