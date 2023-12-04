@@ -35,5 +35,5 @@ eureka:
       defaultZone: http://${EUREKA_SERVER_HOST:localhost}:${EUREKA_SERVER_PORT:8761}/eureka/
 
 
-jwt:
-  secret: XAqmMuc1gMzLwtq9nbg7kuUM+u8yafkvD3VagoJoPq8etm6pu0hYOvdod3dBtv/tFPRH6BD0iCCHXndi9JwtXQ==
+# jwt:
+#  secret: XAqmMuc1gMzLwtq9nbg7kuUM+u8yafkvD3VagoJoPq8etm6pu0hYOvdod3dBtv/tFPRH6BD0iCCHXndi9JwtXQ==
