@@ -19,6 +19,8 @@ spring:
           uri: lb://ms-users
           predicates:
             - Path=/users/**
+          filters:
+            - AuthenticationFilter
 
         - id: ms-identity
           uri: lb://ms-identity
