@@ -36,5 +36,4 @@ eureka:
 
 
 jwt:
-  secret: $2a$12$dQNO.bNyF/E4.NC8ZM/kt.oVU31KSpZNMhTNHDEjvh/2z7zrfkoN6
-  expiration: 86480
+  secret: XAqmMuc1gMzLwtq9nbg7kuUM+u8yafkvD3VagoJoPq8etm6pu0hYOvdod3dBtv/tFPRH6BD0iCCHXndi9JwtXQ==
