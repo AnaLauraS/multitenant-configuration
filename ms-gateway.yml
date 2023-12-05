@@ -29,6 +29,13 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: ms-team
+          uri: lb://ms-team
+          predicates:
+            - Path=/team/**
+          filters:
+            - AuthenticationFilter
+
 management:
   endpoints:
     web:
