@@ -16,7 +16,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        default_schema: notas-dev2
+       # default_schema: notas-dev2
     defer-datasource-initialization: true
 
 message: hello from ms-users
