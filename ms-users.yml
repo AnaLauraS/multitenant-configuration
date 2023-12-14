@@ -26,6 +26,8 @@ spring:
 queue:
   users:
     name: newUser
+  updateUsers:
+    name: updateUser
 
 message: hello from ms-users
 
