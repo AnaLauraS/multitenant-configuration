@@ -29,6 +29,8 @@ queue:
     name: newUser
   updateUsers:
     name: updateUser
+  passChange:
+    name: passChange
 
 message: hello from ms-identity
 
