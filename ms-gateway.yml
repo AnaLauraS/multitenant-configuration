@@ -36,6 +36,13 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: ms-issue
+          uri: lb://ms-issue
+          predicates:
+            - Path=/issue/**
+          filters:
+            - AuthenticationFilter
+
 management:
   endpoints:
     web:
