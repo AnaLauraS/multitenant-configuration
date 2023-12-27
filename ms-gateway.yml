@@ -43,6 +43,13 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: ms-comment
+          uri: lb://ms-comment
+          predicates:
+            - Path=/comment/**
+          filters:
+            - AuthenticationFilter
+
 management:
   endpoints:
     web:
