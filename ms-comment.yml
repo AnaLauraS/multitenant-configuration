@@ -1,0 +1,24 @@
+server:
+  port: ${PORT:0}
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: comments
+
+message: hello from ms-comment
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://${EUREKA_SERVER_HOST:localhost}:${EUREKA_SERVER_PORT:8761}/eureka/
