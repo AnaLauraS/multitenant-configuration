@@ -4,26 +4,6 @@ server:
 spring:
   cloud:
     gateway:
-
-# prueba a ver si anda react
-
-      default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "http://127.0.0.1:3000,http://127.0.0.1:3001"
-            allowedHeaders: "*"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-
-
-#########################
-
-
-    
       discovery:
         locator:
           enabled: true
