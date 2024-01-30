@@ -50,6 +50,13 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: ms-roadmap
+          uri: lb://ms-roadmap
+          predicates:
+            - Path=/roadmap/**
+          filters:
+            - AuthenticationFilter
+
 management:
   endpoints:
     web:
