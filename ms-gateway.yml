@@ -57,6 +57,13 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: ms-step
+          uri: lb://ms-step
+          predicates:
+            - Path=/step/**
+          filters:
+            - AuthenticationFilter
+
 management:
   endpoints:
     web:
