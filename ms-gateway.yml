@@ -64,6 +64,13 @@ spring:
           filters:
             - AuthenticationFilter
 
+        - id: ms-report
+          uri: lb://ms-report
+          predicates:
+            - Path=/report/**
+          filters:
+            - AuthenticationFilter
+
 management:
   endpoints:
     web:
