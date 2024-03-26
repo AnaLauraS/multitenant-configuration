@@ -324,8 +324,12 @@ CREATE TABLE IF NOT EXISTS "notas-dev2".bc_component
     bc_component_id SERIAL NOT NULL,
     component_type integer NOT NULL,
     concept character varying COLLATE pg_catalog."default" NOT NULL,
-    mont double precision NOT NULL,
-    CONSTRAINT bc_component_pkey PRIMARY KEY (bc_component_id)
+    amount double precision NOT NULL,
+    CONSTRAINT bc_component_pkey PRIMARY KEY (bc_component_id),
+    CONSTRAINT component_type FOREIGN KEY (component_type)
+        REFERENCES "notas-dev2".bc_component_type (bc_component_type_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 )
 
 TABLESPACE pg_default;
