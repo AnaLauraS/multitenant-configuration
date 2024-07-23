@@ -31,6 +31,8 @@ queue:
     name: updateUser
   passChange:
     name: passChange
+  recover:
+    name: recover
 
 message: hello from ms-identity
 
