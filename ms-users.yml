@@ -31,8 +31,8 @@ spring:
       mail:
         smtp:
           auth: true
-          starttls:
-            enable: true
+          starttls.enable: true
+          ssl.trust: smtp.gmail.com
 
 queue:
   users:
