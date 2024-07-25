@@ -43,6 +43,8 @@ queue:
     name: passChange
   recover:
     name: recover
+  newFreeUser:
+    name: newFreeUser
 
 message: hello from ms-users
 
