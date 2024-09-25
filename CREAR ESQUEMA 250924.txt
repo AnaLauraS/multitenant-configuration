@@ -1,0 +1,379 @@
+CREAR ESQUEMA 25/09/24:
+
+CREATE SCHEMA IF NOT EXISTS "notas-dev2"
+    AUTHORIZATION postgres;
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".project
+(
+    project_id SERIAL NOT NULL,
+    project_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    project_description character varying COLLATE pg_catalog."default",
+    contacts character varying COLLATE pg_catalog."default",
+    created_at date NOT NULL,
+    close_at date,
+    cloud_id character varying COLLATE pg_catalog."default",
+    key_jira character varying COLLATE pg_catalog."default",
+    CONSTRAINT "projectId" PRIMARY KEY (project_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".project
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".rol
+(
+    id_rol SERIAL NOT NULL,
+    rol_name character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT rol_pkey PRIMARY KEY (id_rol)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".rol
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".user_state
+(
+    id_user_state SERIAL NOT NULL,
+    name_user_state character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT user_state_pkey PRIMARY KEY (id_user_state)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".user_state
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".users
+(
+    id_user SERIAL NOT NULL,
+    user_name character varying(50) COLLATE pg_catalog."default",
+    user_lastname character varying(50) COLLATE pg_catalog."default",
+    email character varying(70) COLLATE pg_catalog."default" NOT NULL,
+    password character varying COLLATE pg_catalog."default" NOT NULL,
+    user_created_at date NOT NULL,
+    id_rol integer NOT NULL,
+    id_user_state integer NOT NULL,
+    update_at timestamp with time zone,
+    access_token_jira character varying COLLATE pg_catalog."default",
+    refresh_token_jira character varying COLLATE pg_catalog."default",
+    CONSTRAINT id_user PRIMARY KEY (id_user),
+    CONSTRAINT constraint_email UNIQUE (email),
+    CONSTRAINT id_rol FOREIGN KEY (id_rol)
+        REFERENCES "notas-dev2".rol (id_rol) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_user_state FOREIGN KEY (id_user_state)
+        REFERENCES "notas-dev2".user_state (id_user_state) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".users
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".team
+(
+    id_team SERIAL NOT NULL,
+    project_id integer NOT NULL,
+    user_id integer NOT NULL,
+    up_date date NOT NULL,
+    down_date date,
+    CONSTRAINT id_team PRIMARY KEY (id_team),
+    CONSTRAINT id_project FOREIGN KEY (project_id)
+        REFERENCES "notas-dev2".project (project_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_user FOREIGN KEY (user_id)
+        REFERENCES "notas-dev2".users (id_user) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".team
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".issue_type
+(
+    id_issue_type SERIAL NOT NULL,
+    name_issue_type character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT issue_type_pkey PRIMARY KEY (id_issue_type)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".issue_type
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".impact
+(
+    id_impact SERIAL NOT NULL,
+    name_impact character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT impact_pkey PRIMARY KEY (id_impact)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".impact
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".issue
+(
+    id_issue SERIAL NOT NULL,
+    title character varying COLLATE pg_catalog."default" NOT NULL,
+    description character varying COLLATE pg_catalog."default",
+    open_at date NOT NULL,
+    close_at date,
+    project_id integer NOT NULL,
+    issue_type_id integer NOT NULL DEFAULT 1,
+    impact_id integer NOT NULL DEFAULT 1,
+    comments character varying COLLATE pg_catalog."default",
+    CONSTRAINT issue_pkey PRIMARY KEY (id_issue),
+    CONSTRAINT impact_id FOREIGN KEY (impact_id)
+        REFERENCES "notas-dev2".impact (id_impact) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT issue_type_id FOREIGN KEY (issue_type_id)
+        REFERENCES "notas-dev2".issue_type (id_issue_type) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT project_id FOREIGN KEY (project_id)
+        REFERENCES "notas-dev2".project (project_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".issue
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".roadmap
+(
+    roadmap_id SERIAL NOT NULL,
+    id_project integer NOT NULL,
+    version smallint,
+    since_date date NOT NULL,
+    reason character varying COLLATE pg_catalog."default",
+    CONSTRAINT roadmap_pkey PRIMARY KEY (roadmap_id),
+    CONSTRAINT project_id FOREIGN KEY (id_project)
+        REFERENCES "notas-dev2".project (project_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".roadmap
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".sprint_state
+(
+    sprint_state_id SERIAL NOT NULL,
+    name_state character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT sprint_state_pkey PRIMARY KEY (sprint_state_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".sprint_state
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".sprint
+(
+    sprint_id SERIAL NOT NULL,
+    title character varying COLLATE pg_catalog."default" NOT NULL,
+    goal character varying COLLATE pg_catalog."default",
+    state integer NOT NULL DEFAULT 1,
+    plan_datein date NOT NULL,
+    plan_dateout date NOT NULL,
+    real_datein date,
+    real_dateout date,
+    CONSTRAINT sprint_pkey PRIMARY KEY (sprint_id),
+    CONSTRAINT state FOREIGN KEY (state)
+        REFERENCES "notas-dev2".sprint_state (sprint_state_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".sprint
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".roadmap_has_sprint
+(
+    id SERIAL NOT NULL,
+    id_roadmap integer NOT NULL,
+    id_sprint integer NOT NULL,
+    CONSTRAINT roadmap_has_sprint_pkey PRIMARY KEY (id),
+    CONSTRAINT id_roadmap FOREIGN KEY (id_roadmap)
+        REFERENCES "notas-dev2".roadmap (roadmap_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_sprint FOREIGN KEY (id_sprint)
+        REFERENCES "notas-dev2".sprint (sprint_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".roadmap_has_sprint
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".step_state
+(
+    id_step_state SERIAL NOT NULL,
+    name_step_state character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT step_state_pkey PRIMARY KEY (id_step_state)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".step_state
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".step_priority
+(
+    id_step_priority SERIAL NOT NULL,
+    value character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT step_priority_pkey PRIMARY KEY (id_step_priority)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".step_priority
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".step
+(
+    id_step SERIAL NOT NULL,
+    project integer NOT NULL,
+    title_step character varying COLLATE pg_catalog."default" NOT NULL,
+    description_step character varying COLLATE pg_catalog."default",
+    planned_date date,
+    priority integer NOT NULL DEFAULT 1,
+    state integer NOT NULL DEFAULT 1,
+    assigned integer,
+    date_complete date,
+    comments_step character varying COLLATE pg_catalog."default",
+    CONSTRAINT step_pkey PRIMARY KEY (id_step),
+    CONSTRAINT assigned FOREIGN KEY (assigned)
+        REFERENCES "notas-dev2".users (id_user) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT priority FOREIGN KEY (priority)
+        REFERENCES "notas-dev2".step_priority (id_step_priority) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT project FOREIGN KEY (project)
+        REFERENCES "notas-dev2".project (project_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT state FOREIGN KEY (state)
+        REFERENCES "notas-dev2".step_state (id_step_state) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".step
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".bc
+(
+    bc_id SERIAL NOT NULL,
+    id_project integer NOT NULL,
+    version integer NOT NULL,
+    update date NOT NULL,
+    first_investment date,
+    last_investment date,
+    rate double precision,
+    roi double precision,
+    payback double precision,
+    tir double precision,
+    van2 double precision,
+    van5 double precision,
+    CONSTRAINT bc_pkey PRIMARY KEY (bc_id),
+    CONSTRAINT project FOREIGN KEY (id_project)
+        REFERENCES "notas-dev2".project (project_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".bc
+    OWNER to postgres;
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".bc_component_type
+(
+    bc_component_type_id SERIAL NOT NULL,
+    name_bc_component character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT typy_bc_component_pkey PRIMARY KEY (bc_component_type_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".bc_component_type
+    OWNER to postgres;
+
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".bc_component
+(
+    bc_component_id SERIAL NOT NULL,
+    component_type integer NOT NULL,
+    concept character varying COLLATE pg_catalog."default" NOT NULL,
+    amount double precision NOT NULL,
+    CONSTRAINT bc_component_pkey PRIMARY KEY (bc_component_id),
+    CONSTRAINT component_type FOREIGN KEY (component_type)
+        REFERENCES "notas-dev2".bc_component_type (bc_component_type_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".bc_component
+    OWNER to postgres;
+
+
+
+CREATE TABLE IF NOT EXISTS "notas-dev2".bc_has_component
+(
+    bc_has_component_id SERIAL NOT NULL,
+    id_bc integer NOT NULL,
+    id_component integer NOT NULL,
+    CONSTRAINT bc_has_component_pkey PRIMARY KEY (bc_has_component_id),
+    CONSTRAINT id_bc FOREIGN KEY (id_bc)
+        REFERENCES "notas-dev2".bc (bc_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT id_component FOREIGN KEY (id_component)
+        REFERENCES "notas-dev2".bc_component (bc_component_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS "notas-dev2".bc_has_component
+    OWNER to postgres;
